@@ -25,6 +25,11 @@
             driver.Quit();  
         }
 
+        public void SwitchToFrame(string frame)
+        {
+            driver.SwitchTo().Frame(frame);
+        }
+
         public void Login(string login, string password)
         {
             //find and click Login Button
@@ -39,7 +44,11 @@
             passwordField.SendKeys(password);
             passwordField.Submit();
 
-            IWebElement iframe = wait.Until(x => x.FindElement(By.Id("thirdPartyFrame_home")));
+            wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+            //driver.SwitchTo().Frame("home");
+            //wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+
+            //IWebElement iframe = wait.Until(x => x.FindElement(By.Id("thirdPartyFrame_home")));
             //driver.SwitchTo().Frame("home");
         }
     }
