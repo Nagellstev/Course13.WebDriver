@@ -1,13 +1,11 @@
 using MailComTest;
 using OpenQA.Selenium.Support.UI;
+using System.Numerics;
 
 namespace MailTest
 {
     public class MailTest
     {
-        public IWebDriver Driver { get; set; }
-        public WebDriverWait Wait { get; set; }
-
         public class MailComFixture : IDisposable
         {
             public MailComPage mailComPage { get; set; } 
@@ -37,8 +35,17 @@ namespace MailTest
             MailComPage page = mailComFixture.mailComPage;
 
             //Act
-            page.GotoUrl(url);
-            string result = page.driver.Title;
+            string result = "";
+
+            try
+            {
+                page.GotoUrl(url);
+                result = page.driver.Title;
+            }
+            catch (Exception exeption)
+            {
+                result = $"Error: {exeption.Message}";
+            }
 
             //Arrange
             Assert.Equal(result, expectedTitle);
@@ -48,41 +55,33 @@ namespace MailTest
 
         [Theory]
         [InlineData("https://www.mail.com", "kazimir@myself.com", "pKiVGd6qAHSb6#D")]
-        //[InlineData("https://www.mail.com", "kazimir@myself.com", "123456")]
-        //[InlineData("https://www.mail.com", "kazimir@myself.com", "")]
-        //[InlineData("https://tutanota.com", "oscar-claude@tutanota.com", "SfTxJeeGnhKzk9j")]
-        //[InlineData("https://tutanota.com", "oscar-claude@tutanota.com", "123456")]
-        //[InlineData("https://tutanota.com", "oscar-claude@tutanota.com", "")]
 
-        public void LoginTest(string url, string login, string password)
+        public void ProperLoginTest(string url, string login, string password)
         {
-
             //Arrange
             MailComFixture mailComFixture = new MailComFixture();
             MailComPage page = mailComFixture.mailComPage;
 
             //Act
-            page.OpenBrowser();
-            page.GotoUrl(url);
-
-            page.driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
-            WebDriverWait wait = new WebDriverWait(page.driver, TimeSpan.FromSeconds(10));
-
-            page.Login(login, password);
-            wait = new WebDriverWait(page.driver, TimeSpan.FromSeconds(10));
-            page.driver.SwitchTo().Frame("home");
-
             string result = "";
-
-            //WebDriverWait wait = new WebDriverWait(page.driver, TimeSpan.FromSeconds(5));
 
             try
             {
+                page.OpenBrowser();
+                page.GotoUrl(url);
+
+                page.driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
+                WebDriverWait wait = new WebDriverWait(page.driver, TimeSpan.FromSeconds(10));
+
+                page.Login(login, password);
+                wait = new WebDriverWait(page.driver, TimeSpan.FromSeconds(10));
+                page.driver.SwitchTo().Frame("home");
+
                 result = page.driver.FindElement(By.XPath("//span[@class=\"username\"]")).Text;
             }
             catch (Exception exeption)
             {
-                result += $"Error: {exeption.Message}";
+                result = $"Error: {exeption.Message}";
             }
 
             //Arrange
@@ -92,44 +91,31 @@ namespace MailTest
         }
 
         [Theory]
-        [InlineData("https://www.mail.com", "kazimir@myself.com", "pKiVGd6qAHSb6#D")]
-        public void OldLoginTest(string url, string login, string password)
+        [InlineData("https://www.mail.com", "kazimir@myself.com", "123456", "PLEASE TRY AGAIN!")]
+        [InlineData("https://www.mail.com", "kazimir@myself.com", "", "PLEASE TRY AGAIN!")]
+        [InlineData("https://www.mail.com", "", "", "PLEASE TRY AGAIN!")]
+
+        public void UnproperLoginTest(string url, string login, string password, string expected)
         {
             //Arrange
-            // Local Selenium WebDriver
             MailComFixture mailComFixture = new MailComFixture();
             MailComPage page = mailComFixture.mailComPage;
 
-            page.driver.Manage().Window.Maximize();
-            page.driver.Navigate().GoToUrl(url);
-
-            page.driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
-            WebDriverWait wait = new WebDriverWait(page.driver, TimeSpan.FromSeconds(10));
-
-            /*
-            IWebElement query = page.driver.FindElement(By.Id("login-button"));
-
-            new Actions(page.driver).MoveToElement(query).Click().Perform();
-
-            wait = new WebDriverWait(page.driver, TimeSpan.FromSeconds(10));
-            page.driver.FindElement(By.Id("login-email")).SendKeys(login);
-
-            query = page.driver.FindElement(By.Id("login-password"));
-            query.SendKeys(password);
-            query.Submit();
-            
-            */
-            page.Login(login, password);
-
-            //wait = new WebDriverWait(page.driver, TimeSpan.FromSeconds(10));
-            page.driver.SwitchTo().Frame("home");
-
+            //Act
             string result = "";
 
-            //Act
             try
             {
-                result = page.driver.FindElement(By.XPath("//span[@class=\"username\"]")).Text;
+                page.OpenBrowser();
+                page.GotoUrl(url);
+
+                page.driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
+                WebDriverWait wait = new WebDriverWait(page.driver, TimeSpan.FromSeconds(10));
+
+                page.Login(login, password);
+                wait = new WebDriverWait(page.driver, TimeSpan.FromSeconds(10));
+
+                result = page.driver.FindElement(By.XPath("//div[@class=\"text-wrapper\"]/h1")).Text;
             }
             catch (Exception exeption)
             {
@@ -137,90 +123,10 @@ namespace MailTest
             }
 
             //Arrange
-            Assert.Equal(login, result);
+            Assert.Equal(expected, result);
 
-            page.driver.Close();
-            page.driver.Quit();
+            mailComFixture.Dispose();
         }
 
-        [Theory]
-        [InlineData("https://www.mail.com", "kazimir@myself.com", "pKiVGd6qAHSb6#D")]
-        public void Old1LoginTest(string url, string login, string password)
-        {
-            //Arrange
-            // Local Selenium WebDriver
-            MailComFixture mailComFixture = new MailComFixture();
-            MailComPage page = mailComFixture.mailComPage;
-
-            page.driver.Manage().Window.Maximize();
-            page.driver.Navigate().GoToUrl(url);
-
-            page.driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
-            WebDriverWait wait = new WebDriverWait(page.driver, TimeSpan.FromSeconds(10));
-
-            IWebElement query = page.driver.FindElement(By.Id("login-button"));
-
-            new Actions(page.driver).MoveToElement(query).Click().Perform();
-
-            wait = new WebDriverWait(page.driver, TimeSpan.FromSeconds(10));
-            page.driver.FindElement(By.Id("login-email")).SendKeys(login);
-
-            query = page.driver.FindElement(By.Id("login-password"));
-            query.SendKeys(password);
-            query.Submit();
-
-            wait = new WebDriverWait(page.driver, TimeSpan.FromSeconds(10));
-            page.driver.SwitchTo().Frame("home");
-
-            string result = "";
-
-            //Act
-            try
-            {
-                result = page.driver.FindElement(By.XPath("//span[@class=\"username\"]")).Text;
-            }
-            catch (Exception exeption)
-            {
-                result += $"Error: {exeption.Message}";
-            }
-
-            //Arrange
-            Assert.Equal(login, result);
-
-            page.driver.Close();
-            page.driver.Quit();
-        }
-
-        [Theory]
-        [InlineData("https://www.mail.com", "kazimir@myself.com", "pKiVGd6qAHSb6#D")]
-        public void Old2LoginTest(string url, string login, string password)
-        {
-            //Arrange
-            // Local Selenium WebDriver
-            Driver = new ChromeDriver();
-            Driver.Manage().Window.Maximize();
-            Driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(30);
-            Wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(10));
-            Driver.Navigate().GoToUrl(url);
-            Wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(10));
-            IWebElement query = Driver.FindElement(By.Id("login-button"));
-            new Actions(Driver).MoveToElement(query).Click().Perform();
-            Wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(10));
-            Driver.FindElement(By.Id("login-email")).SendKeys(login);
-            query = Driver.FindElement(By.Id("login-password"));
-            query.SendKeys(password);
-            query.Submit();
-            Wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(20));
-            Driver.SwitchTo().Frame("home");
-            string result = "";
-
-            //Act
-            result = Driver.FindElement(By.XPath("//span[@class=\"username\"]")).Text;
-
-            //Arrange
-            Assert.Equal(login, result);
-            Driver.Close();
-            Driver.Quit();
-        }
     }
 }
