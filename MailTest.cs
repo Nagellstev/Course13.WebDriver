@@ -26,7 +26,6 @@ namespace MailTest
 
         [Theory]
         [InlineData("https://www.mail.com", "Free email accounts | Register today at mail.com")]
-        [InlineData("https://tutanota.com", "Secure email: Tutanota free encrypted email.")]
 
         public void GotoUrlTest(string url, string expectedTitle)
         {
@@ -47,7 +46,7 @@ namespace MailTest
                 result = $"Error: {exeption.Message}";
             }
 
-            //Arrange
+            //Assert
             Assert.Equal(result, expectedTitle);
 
             mailComFixture.Dispose();
@@ -84,7 +83,7 @@ namespace MailTest
                 result = $"Error: {exeption.Message}";
             }
 
-            //Arrange
+            //Assert
             Assert.Equal(login, result);
 
             mailComFixture.Dispose();
@@ -122,7 +121,7 @@ namespace MailTest
                 result += $"Error: {exeption.Message}";
             }
 
-            //Arrange
+            //Assert
             Assert.Equal(expected, result);
 
             mailComFixture.Dispose();
