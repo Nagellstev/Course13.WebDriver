@@ -172,6 +172,7 @@ namespace MailTest
 
             mailComFixture.Dispose();
         }
+
         [Theory]
         [InlineData("https://www.mail.com", "kazimir@myself.com", "pKiVGd6qAHSb6#D")]
 

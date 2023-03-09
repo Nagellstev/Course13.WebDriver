@@ -52,5 +52,12 @@
             //IWebElement iframe = wait.Until(x => x.FindElement(By.Id("thirdPartyFrame_home")));
             //driver.SwitchTo().Frame("home");
         }
+
+        public void LastLetterClick()
+        {
+            WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+            IWebElement lastLetter = wait.Until(x => x.FindElement(By.XPath("//div[@class=\"flex-grow min-width-0\"]")));
+            lastLetter.Click();
+        }
     }
 }

@@ -112,8 +112,6 @@ namespace MailComTest
             lastLetter.Click();
         }
 
-
-        /*
         public void SendEmail(string email, string subject, string text)
         {
             WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
@@ -139,6 +137,5 @@ namespace MailComTest
             driver.SwitchTo().Frame("mail");
             SendClick();
         }
-        */
     }
 }

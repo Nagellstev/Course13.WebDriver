@@ -13,6 +13,7 @@ Implement the following autotests:
  - Log in to one of the services and send a letter from it to another mailbox of predefined randomly generated content. 
  Make sure that the letter has arrived and is displayed as unread and that it has the correct sender. 
  Read the letter and verify that the real content matches the sent one. 
+ <---done till here--->
  Send back a response to the first server containing the new user alias for the first mailbox.
  - Log in to the first mail server, and change his nickname to the new one in the user's personal data. 
  Verify that the nickname has changed.
