@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace MailTest.MailComPages
 {
-    internal class MailComMyAccountPage
+    public class MailComMyAccountPage
     {
+
     }
 }
