@@ -58,6 +58,14 @@ namespace MailComTest
             composeEmail.Click();
         }
 
+        public void EnterInbox()
+        {
+            //find and click "Compose Email"
+            WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+            IWebElement composeEmail = wait.Until(x => x.FindElement(By.XPath("//div[@id=\"navigation\"]/ul/li[@class=\"item top-fade\"]/a[@class=\"mail\"]")));
+            composeEmail.Click();
+        }
+
         public void ToInput(string to)
         {
             //find and fill input line"
