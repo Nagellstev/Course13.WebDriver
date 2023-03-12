@@ -9,6 +9,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="MailComPages - Backup\**" />
+    <EmbeddedResource Remove="MailComPages - Backup\**" />
+    <None Remove="MailComPages - Backup\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="MailComPage.cs" />
+    <Compile Remove="MailComTest - Backup.cs" />
+    <Compile Remove="MailTest.cs" />
+    <Compile Remove="TutanotaComPage.cs" />
+    <Compile Remove="TutanotaComTest - Backup.cs" />
+    <Compile Remove="TwoMailsTest.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="DotNetSeleniumExtras.WaitHelpers" Version="3.11.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.4.1" />
     <PackageReference Include="Selenium.Support" Version="4.8.1" />

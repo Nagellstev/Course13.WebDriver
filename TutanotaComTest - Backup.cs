@@ -2,15 +2,15 @@ using TutanotaComTest;
 using OpenQA.Selenium.Support.UI;
 using System.Numerics;
 
-namespace TutanotaTest
+namespace TutanotaComTest
 {
-    public class TutanotaTest
+    public class TutanotaComTest1
     {
-        public class TutanotaComFixture : IDisposable
+        public class TutanotaComFixture1 : IDisposable
         {
             public TutanotaComPage tutanotaComPage { get; set; } 
 
-            public TutanotaComFixture()
+            public TutanotaComFixture1()
             {
                 // SetUp handled in each test case
                 ChromeOptions options = new ChromeOptions();
@@ -32,7 +32,7 @@ namespace TutanotaTest
         public void GotoUrlTest(string url, string expectedTitle)
         {
             //Arrange
-            TutanotaComFixture tutanotaComFixture = new TutanotaComFixture();
+            TutanotaComFixture1 tutanotaComFixture = new TutanotaComFixture1();
             TutanotaComPage page = tutanotaComFixture.tutanotaComPage;
 
             //Act
@@ -60,7 +60,7 @@ namespace TutanotaTest
         public void ProperLoginTest(string url, string login, string password)
         {
             //Arrange
-            TutanotaComFixture tutanotaComFixture = new TutanotaComFixture();
+            TutanotaComFixture1 tutanotaComFixture = new TutanotaComFixture1();
             TutanotaComPage page = tutanotaComFixture.tutanotaComPage;
 
             //Act
@@ -101,7 +101,7 @@ namespace TutanotaTest
         public void UnproperLoginTest(string url, string login, string password, string expected)
         {
             //Arrange
-            TutanotaComFixture mailComFixture = new TutanotaComFixture();
+            TutanotaComFixture1 mailComFixture = new TutanotaComFixture1();
             TutanotaComPage page = mailComFixture.tutanotaComPage;
 
             //Act
