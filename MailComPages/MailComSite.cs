@@ -82,6 +82,64 @@ namespace MailTest.MailComPages
             mailComLoginPageMap.PasswordField.Submit();
         }
 
+        public void SendLetter(string to, string subject, string text)
+        {
+            mailComEmailPageMap.SwitchToDefaultContent();
+            mailComTopControlsLoggedMap.EmailButton.Click();
+            mailComEmailPageMap.SwitchToMailFrame();
+            mailComEmailPageMap.ComposeEmailButton.Click();
+            mailComEmailPageMap.ToField.SendKeys(to);
+            mailComEmailPageMap.SubjectField.SendKeys(subject);
+            mailComEmailPageMap.NewLetterTextInput(text);
+            mailComEmailPageMap.SendButton.Click();
+            mailComEmailPageMap.CloseSucsessMessage.Click();
+            mailComEmailPageMap.SwitchToDefaultContent();
+        }
+
+        public List<string> ReadIncomingLetter()
+        {
+            List<string> letter = new List<string>();
+            mailComEmailPageMap.SwitchToDefaultContent();
+            mailComTopControlsLoggedMap.EmailButton.Click();
+            mailComEmailPageMap.SwitchToMailFrame();
+            mailComEmailPageMap.InboxButton.Click();
+            try
+            {
+                mailComEmailPageMap.LastLetter.Click();
+            }
+            catch (StaleElementReferenceException)
+            {
+                mailComEmailPageMap.LastLetter.Click();
+            }
+            letter.Add(mailComEmailPageMap.LetterFrom.Text);
+            letter.Add(mailComEmailPageMap.LetterSubject.Text);
+            letter.Add(mailComEmailPageMap.EmailTextRead());
+            mailComEmailPageMap.SwitchToDefaultContent();
+            return letter;
+        }
+
+        public List<string> ReadOutcomingLetter()
+        {
+            List<string> letter = new List<string>();
+            mailComEmailPageMap.SwitchToDefaultContent();
+            mailComTopControlsLoggedMap.EmailButton.Click();
+            mailComEmailPageMap.SwitchToMailFrame();
+            mailComEmailPageMap.SentButton.Click();
+            try
+            {
+                mailComEmailPageMap.LastLetter.Click();
+            }
+            catch (StaleElementReferenceException)
+            {
+                mailComEmailPageMap.LastLetter.Click();
+            }
+            letter.Add(mailComEmailPageMap.LetterTo.GetAttribute("title"));
+            letter.Add(mailComEmailPageMap.LetterSubject.Text);
+            letter.Add(mailComEmailPageMap.EmailTextRead());
+            mailComEmailPageMap.SwitchToDefaultContent();
+            return letter;
+        }
+
         #endregion
     }
 }

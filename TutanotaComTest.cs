@@ -5,6 +5,7 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using OpenQA.Selenium.Support.UI;
 using System;
 using System.Numerics;
+using static MailComTest.MailComTest;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace TutanotaComTest
@@ -13,12 +14,15 @@ namespace TutanotaComTest
     {
         public class TutanotaComFixture : IDisposable
         {
-            private ChromeDriver chromeDriver = new ChromeDriver();
+            private ChromeDriver chromeDriver;// = new ChromeDriver();
             public TutanotaComSite tutanotaComSite { get; set; }
 
             public TutanotaComFixture()
             {
                 // SetUp handled in each test case
+                ChromeOptions options = new ChromeOptions();
+                options.AddArguments("--disable-notifications"); // to disable notification
+                chromeDriver = new ChromeDriver(options);
                 tutanotaComSite = new TutanotaComSite(chromeDriver);
 
                 chromeDriver.Manage().Window.Maximize();
@@ -104,5 +108,34 @@ namespace TutanotaComTest
                 tutanotaComFixture.Dispose();
             }
         }
+
+        [Theory]
+        [InlineData("kazimir@myself.com", "subject", "text")]
+        public void SendLetterTest(string to, string subject, string text)
+        {
+            //Arrange
+            TutanotaComFixture tutanotaComFixture = new TutanotaComFixture();
+            TutanotaComSite tutanotaComSite = tutanotaComFixture.tutanotaComSite;
+            string login = "oscar-claude@tutanota.com";
+            string password = "SfTxJeeGnhKzk9j";
+
+            try
+            {
+                //Act
+                tutanotaComSite.Navigate();
+                tutanotaComSite.Login(login, password);
+                tutanotaComSite.SendLetter(to, subject, text);
+
+                List<string> outcomingLetter = tutanotaComSite.ReadOutcomingLetter();
+
+                //Assert
+                tutanotaComSite.Validate().SentLetterCheck("kazimir@"/*to*/, subject, text, outcomingLetter[0], outcomingLetter[1], outcomingLetter[2]);
+            }
+            finally
+            {
+                tutanotaComFixture.Dispose();
+            }
+        }
+
     }
 }

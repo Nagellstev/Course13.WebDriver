@@ -17,7 +17,7 @@ namespace MailTest.MailComPages
         {
             get
             {
-                return "home";
+                return "mail";
             }
         }
 
@@ -26,7 +26,7 @@ namespace MailTest.MailComPages
         {
             get
             {
-                return WebPage.LocateElement(By.XPath("//div[@id=\"section-0\"]/div[@class=\"navigation-container-top\"]"));
+                return WebPage.LocateElement(By.XPath("//div[@id=\"section-0\"]/div[@class=\"navigation-container-top\"]/div[@class=\"panel panel-composition\"]/div[@class=\"button-group button-group-firstblockbutton js-component\"]"));
             }
         }
         public IWebElement InboxButton
@@ -63,14 +63,15 @@ namespace MailTest.MailComPages
         {
             get
             {
-                return WebPage.LocateElement(By.XPath("//div[@id=\"mail-details\"]/div/ul/li/div/dl[@class=\"mail-sender form-objc\"]/dd/a"));
+                return WebPage.LocateElement(By.XPath("//dl[@class=\"mail-sender form-objc\"]/dd/a"));
             }
         }
         public IWebElement LetterTo
         {
             get
             {
-                return WebPage.LocateElement(By.XPath("//div[@id=\"mail-details\"]/div/ul/li/div/dl[@class=\"mail-recipient form-objc\"]/dd/a"));
+                return WebPage.LocateElement(By.XPath("//dl[@class=\"mail-recipient form-objc\"]/dd/a"));
+                //return WebPage.LocateElement(By.XPath("//div[@id=\"mail-details\"]/div/ul/li/div/dl[@class=\"mail-recipient form-objc\"]/dd/a"));
             }
         }
         public IWebElement LetterText
@@ -87,14 +88,16 @@ namespace MailTest.MailComPages
         {
             get
             {
-                return WebPage.LocateElement(By.XPath("//div[@class=\"form-element-multiobjecttextfield js-component\"]/div[@class=\"select2-container select2-container-multi js-select2\"]/ul[@class=\"select2-choices\"]/li[@class=\"select2-search-field\"]/input[@type=\"text\"]"));
+                //return WebPage.LocateElement(By.XPath("//div[@class=\"form-element-multiobjecttextfield js-component\"]/div[@class=\"select2-container select2-container-multi js-select2\"]/ul[@class=\"select2-choices\"]/li[@class=\"select2-search-field\"]/input[@type=\"text\"]"));
+                return WebPage.LocateElement(By.XPath("//ul[@class=\"select2-choices\"]/li[@class=\"select2-search-field\"]/input[@type=\"text\"]"));
             }
         }
         public IWebElement SubjectField
         {
             get
             {
-                return WebPage.LocateElement(By.XPath("//div[@class=\"compose-header_item compose-header_subject mailobjectpanel-textfield js-component mailobjectpanel\"]/div[@class=\"mailobjectpanel_content\"]/input[@type=\"text\"]"));
+                //return WebPage.LocateElement(By.XPath("//div[@class=\"compose-header_item compose-header_subject mailobjectpanel-textfield js-component mailobjectpanel\"]/div[@class=\"mailobjectpanel_content\"]/input[@type=\"text\"]"));
+                return WebPage.LocateElement(By.XPath("//div[@class=\"mailobjectpanel_content\"]/input[@type=\"text\"]"));
             }
         }
         public IWebElement TextEditorFrame
@@ -149,6 +152,16 @@ namespace MailTest.MailComPages
             Driver.SwitchTo().ParentFrame();
             return result;
         }
+
+        public void SwitchToMailFrame()
+        {
+            Driver.SwitchTo().Frame(Frame);
+        }
+
+        public void SwitchToDefaultContent()
+        {
+            WebPage.Driver.SwitchTo().DefaultContent();
+        }
         /*
         public string FromCheck()
         {
@@ -159,7 +172,6 @@ namespace MailTest.MailComPages
         {
             return webPageControls.GetAttribute(letterTo, "title");
         }
-        */
         //Sending e-mail scenario
         public void SendEmail(string to, string subject, string text)
         {
@@ -176,5 +188,6 @@ namespace MailTest.MailComPages
             Driver.SwitchTo().ParentFrame();
             SendButton.Click();
         }
+        */
     }
 }

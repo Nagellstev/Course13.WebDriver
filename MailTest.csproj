@@ -20,7 +20,7 @@
     <Compile Remove="MailTest.cs" />
     <Compile Remove="TutanotaComPage.cs" />
     <Compile Remove="TutanotaComTest - Backup.cs" />
-    <Compile Remove="TwoMailsTest.cs" />
+    <Compile Remove="TwoMailsTest - backup.cs" />
   </ItemGroup>
 
   <ItemGroup>

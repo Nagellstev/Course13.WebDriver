@@ -56,6 +56,69 @@ namespace MailTest.TutanotaPages
             tutanotaComLoginPageMap.SubmitButton.Click();
         }
 
+        public void SendLetter(string to, string subject, string text)
+        {
+            tutanotaComEmailPageMap.NewLetterButton.Click();
+            tutanotaComEmailPageMap.ToField.SendKeys(to);//"kazimir@myself.com");
+            tutanotaComEmailPageMap.SubjectField.SendKeys(subject);
+
+            if (tutanotaComEmailPageMap.ConfidentialButton.GetAttribute("toggled") == "true")
+            {
+                tutanotaComEmailPageMap.ConfidentialButton.Click();
+            }
+
+            tutanotaComEmailPageMap.TextEditorField.Clear();
+            tutanotaComEmailPageMap.TextEditorField.SendKeys(text);
+            tutanotaComEmailPageMap.SendButton.Click();
+        }
+
+        public List<string> ReadIncomingLetter()
+        {
+            List<string> letter = new List<string>();
+            Thread.Sleep(5000);
+            tutanotaComEmailPageMap.IncomingButton.Click();
+            tutanotaComEmailPageMap.LastLetter.Click();
+            letter.Add(tutanotaComEmailPageMap.LetterFrom.Text);
+            letter.Add(tutanotaComEmailPageMap.LetterSubject.Text);
+            letter.Add(tutanotaComEmailPageMap.LetterText.Text);
+            return letter;
+            //return ReadLetter(tutanotaComEmailPageMap.IncomingButton);
+        }
+
+        public List<string> ReadOutcomingLetter()
+        {
+            List<string> letter = new List<string>();
+            Thread.Sleep(5000);
+            tutanotaComEmailPageMap.SentButton.Click();
+            Thread.Sleep(5000);
+            tutanotaComEmailPageMap.LastLetter.Click();
+            letter.Add(tutanotaComEmailPageMap.LetterTo.Text);
+            letter.Add(tutanotaComEmailPageMap.LetterSubject.Text);
+            letter.Add(tutanotaComEmailPageMap.LetterText.Text);
+            return letter;
+            //return ReadLetter(tutanotaComEmailPageMap.SentButton);
+        }
+
+        public void ReplyLetter(string text)
+        {
+            tutanotaComEmailPageMap.ReplyButton.Click();
+            Thread.Sleep(5000);
+            //tutanotaComEmailPageMap.LetterText.Clear();
+            tutanotaComEmailPageMap.LetterText.FindElement(By.XPath("//br")).SendKeys(text);
+            tutanotaComEmailPageMap.SendButton.Click();
+        }
+
+        private List<string> ReadLetter(IWebElement button)
+        {
+            List<string> letter = new List<string>();
+            button.Click();
+            tutanotaComEmailPageMap.LastLetter.Click();
+            letter.Add(tutanotaComEmailPageMap.LetterTo.Text);
+            letter.Add(tutanotaComEmailPageMap.LetterSubject.Text);
+            letter.Add(tutanotaComEmailPageMap.LetterText.Text);
+            return letter;
+        }
+
         #endregion
     }
 }

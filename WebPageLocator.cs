@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OpenQA.Selenium;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -24,7 +25,6 @@ namespace MailTest
 
         public IWebElement LocateElement(By locator)
         {
-            //WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
             return Wait.Until(x => x.FindElement(locator));
         }
     }

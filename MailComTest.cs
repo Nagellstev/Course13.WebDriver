@@ -104,5 +104,34 @@ namespace MailComTest
                 mailComFixture.Dispose();
             }
         }
+
+        [Theory]
+        [InlineData("oscar-claude@tutanota.com", "subject", "text")]
+
+        public void SendLetterTest(string to, string subject, string text)
+        {
+            //Arrange
+            MailComFixture mailComFixture = new MailComFixture();
+            MailComSite mailComSite = mailComFixture.mailComSite;
+            string login = "kazimir@myself.com";
+            string password = "pKiVGd6qAHSb6#D";
+
+            try
+            {
+                //Act
+                mailComSite.Navigate();
+                mailComSite.Login(login, password);
+                mailComSite.SendLetter(to, subject, text);
+
+                List<string> outcomingLetter = mailComSite.ReadOutcomingLetter();
+
+                //Assert
+                mailComSite.Validate().SentLetterCheck(to, subject, text, outcomingLetter[0], outcomingLetter[1], outcomingLetter[2]);
+            }
+            finally
+            {
+                mailComFixture.Dispose();
+            }
+        }
     }
 }

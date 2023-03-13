@@ -76,6 +76,21 @@ namespace MailTest.MailComPages
             Assert.Equal(expected.ToLower(), mailComLoginErrorPageMap.ErrorMessageHeader.Text.ToLower());
         }
 
+        public void SentLetterCheck(
+            string expectedTo, string expectedSubject, string expectedText,
+            string realTo, string realSubject, string realText
+            )
+        {
+            //to check
+            Assert.Contains(expectedTo.ToLower(), realTo);
+
+            //subject check
+            Assert.Equal(expectedSubject, realSubject);
+
+            //text check
+            Assert.Equal(expectedText, realText);
+        }
+
         #endregion
     }
 }
