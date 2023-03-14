@@ -67,6 +67,8 @@ namespace MailTest.MailComPages
 
         public void ProperLogin(string expected)
         {
+            mailComHomePageMap.SwitchToDefaultContent();
+            Thread.Sleep(5000);
             mailComHomePageMap.SwitchToHomeFrame();
             Assert.Equal(expected.ToLower(), mailComHomePageMap.EmailAddress.Text.ToLower());
         }
@@ -89,6 +91,11 @@ namespace MailTest.MailComPages
 
             //text check
             Assert.Equal(expectedText, realText);
+        }
+
+        public void ChangedNameCheck(string expectedName, string realName)
+        {
+            Assert.Equal(expectedName, realName);
         }
 
         #endregion

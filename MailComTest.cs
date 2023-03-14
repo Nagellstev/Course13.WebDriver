@@ -133,5 +133,39 @@ namespace MailComTest
                 mailComFixture.Dispose();
             }
         }
+
+        [Fact]
+        public void ChangeNameTest()
+        {
+            //Arrange
+            MailComFixture mailComFixture = new MailComFixture();
+            MailComSite mailComSite = mailComFixture.mailComSite;
+            string login = "kazimir@myself.com";
+            string password = "pKiVGd6qAHSb6#D";
+
+            try
+            {
+                //Act
+                mailComSite.Navigate();
+                mailComSite.Login(login, password);
+                string text = mailComSite.ReadIncomingLetter()[2];
+
+                string[] newName = text.Split(' ', '\n', '\t', '\r', '\b', ',', '.');
+
+                string firstName = newName[0];
+                string lastName = newName[1];
+
+                mailComSite.ChangeName(firstName, lastName, password);
+
+                string realName = mailComSite.ReadName();
+
+                //Assert
+                mailComSite.Validate().ChangedNameCheck($"{firstName} {lastName}", realName);
+            }
+            finally
+            {
+                mailComFixture.Dispose();
+            }
+        }
     }
 }

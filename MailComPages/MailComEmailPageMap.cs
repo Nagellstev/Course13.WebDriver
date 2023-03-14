@@ -33,7 +33,7 @@ namespace MailTest.MailComPages
         {
             get
             {
-                return WebPage.LocateElement(By.XPath("//div[@id=\"section-0\"]/div[@class=\"navigation-container-top\"]"));
+                return WebPage.LocateElement(By.XPath("//div[@class=\"navigation\"]/ul/li[3]"));
             }
         }
         public IWebElement SentButton
@@ -79,7 +79,8 @@ namespace MailTest.MailComPages
             get
             {
                 //switch to "mail-display-content" frame before using this element
-                return WebPage.LocateElement(By.XPath("//html/body/div/div"));
+                return WebPage.LocateElement(By.XPath("//html/body"));
+                //return WebPage.LocateElement(By.XPath("//html/body/div/div"));
             }
         }
 

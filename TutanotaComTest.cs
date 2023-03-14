@@ -61,7 +61,6 @@ namespace TutanotaComTest
 
         [Theory]
         [InlineData("oscar-claude@tutanota.com", "SfTxJeeGnhKzk9j")]
-
         public void ProperLoginTest(string login, string password)
         {
             //Arrange
@@ -87,7 +86,6 @@ namespace TutanotaComTest
         [InlineData("oscar-claude@tutanota.com", "123456", "Воcстановить доступ")]
         [InlineData("oscar-claude@tutanota.com", "", "Воcстановить доступ")]
         [InlineData("", "", "Воcстановить доступ")]
-
         public void UnproperLoginTest(string login, string password, string expected)
         {
             //Arrange

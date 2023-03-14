@@ -103,14 +103,16 @@ namespace MailTest.MailComPages
             mailComTopControlsLoggedMap.EmailButton.Click();
             mailComEmailPageMap.SwitchToMailFrame();
             mailComEmailPageMap.InboxButton.Click();
-            try
-            {
-                mailComEmailPageMap.LastLetter.Click();
-            }
-            catch (StaleElementReferenceException)
-            {
-                mailComEmailPageMap.LastLetter.Click();
-            }
+            Thread.Sleep(5000);
+            mailComEmailPageMap.LastLetter.Click();
+            //try
+            //{
+            //    mailComEmailPageMap.LastLetter.Click();
+            //}
+            //catch (StaleElementReferenceException)
+            //{
+            //    mailComEmailPageMap.LastLetter.Click();
+            //}
             letter.Add(mailComEmailPageMap.LetterFrom.Text);
             letter.Add(mailComEmailPageMap.LetterSubject.Text);
             letter.Add(mailComEmailPageMap.EmailTextRead());
@@ -138,6 +140,35 @@ namespace MailTest.MailComPages
             letter.Add(mailComEmailPageMap.EmailTextRead());
             mailComEmailPageMap.SwitchToDefaultContent();
             return letter;
+        }
+
+        public void ChangeName(string firstName, string lastName, string password)
+        {
+            mailComEmailPageMap.SwitchToDefaultContent();
+            mailComTopControlsLoggedMap.MoreButton.Click();
+            mailComTopControlsLoggedMap.MyAccountButton.Click();
+            mailComMyAccountPageMap.SwitchToMyAccountFrame();
+            mailComMyAccountPageMap.PersonalData.Click();
+            mailComMyAccountPageMap.Profile.Click();
+            mailComMyAccountPageMap.FirstNameField.Clear();
+            mailComMyAccountPageMap.FirstNameField.SendKeys(firstName);
+            mailComMyAccountPageMap.LastNameField.Clear();
+            mailComMyAccountPageMap.LastNameField.SendKeys(lastName);
+            mailComMyAccountPageMap.PasswordField.SendKeys(password);
+            mailComMyAccountPageMap.SaveChangesButton.Click();
+            mailComEmailPageMap.SwitchToDefaultContent();
+        }
+
+        public string ReadName()
+        {
+            mailComEmailPageMap.SwitchToDefaultContent();
+            mailComTopControlsLoggedMap.MoreButton.Click();
+            mailComTopControlsLoggedMap.MyAccountButton.Click();
+            mailComMyAccountPageMap.SwitchToMyAccountFrame();
+            mailComMyAccountPageMap.MyAccount.Click();
+            string name = mailComMyAccountPageMap.Name.Text;
+            mailComEmailPageMap.SwitchToDefaultContent();
+            return name;
         }
 
         #endregion

@@ -60,9 +60,8 @@ namespace MailTest
         /// send letter from mail.com to tutanota.com
         /// check if subject and text match
         /// </summary>
-        [Theory]
-        [InlineData("")]
-        public void SendFromMailToTutanotaTest(string arg)
+        [Fact]
+        public void SendFromMailToTutanotaTest()
         {
             //Arrange
             MailComFixture mailComFixture = new MailComFixture();
@@ -105,9 +104,8 @@ namespace MailTest
         /// check if subject and text match
         /// respond from tutanota with new alias for mail.com
         /// </summary>
-        [Theory]
-        [InlineData("")]
-        public void SendFromMailToTutanotaAndReplyTest(string arg)
+        [Fact]
+        public void SendFromMailToTutanotaAndReplyTest()
         {
             //Arrange
             MailComFixture mailComFixture = new MailComFixture();

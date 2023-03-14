@@ -14,7 +14,7 @@ namespace MailTest
         public WebPageLocator(IWebDriver browser)
         {
             Driver = browser;
-            Wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(10));
+            Wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(20));
         }
 
         public WebPageLocator(IWebDriver browser, double seconds)
