@@ -36,12 +36,12 @@ namespace MailTest.MailComPages
 
         public void SwitchToHomeFrame()
         {
-            WebPage.Driver.SwitchTo().Frame(Frame);
+            Driver.SwitchTo().Frame(Frame);
         }
 
         public void SwitchToDefaultContent()
         {
-            WebPage.Driver.SwitchTo().DefaultContent();
+            Driver.SwitchTo().DefaultContent();
         }
     }
 }

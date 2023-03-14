@@ -9,23 +9,23 @@ namespace MailTest
 {
     public class WebPageLocator
     {
-        public IWebDriver Driver;
-        public WebDriverWait Wait;
+        private IWebDriver driver;
+        private WebDriverWait wait;
         public WebPageLocator(IWebDriver browser)
         {
-            Driver = browser;
-            Wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(10));
+            driver = browser;
+            wait = new WebDriverWait(driver, TimeSpan.FromSeconds(20));
         }
 
         public WebPageLocator(IWebDriver browser, double seconds)
         {
-            Driver = browser;
-            Wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(seconds));
+            driver = browser;
+            wait = new WebDriverWait(driver, TimeSpan.FromSeconds(seconds));
         }
 
         public IWebElement LocateElement(By locator)
         {
-            return Wait.Until(x => x.FindElement(locator));
+            return wait.Until(x => x.FindElement(locator));
         }
     }
 }

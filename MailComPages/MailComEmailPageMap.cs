@@ -33,7 +33,7 @@ namespace MailTest.MailComPages
         {
             get
             {
-                return WebPage.LocateElement(By.XPath("//div[@id=\"section-0\"]/div[@class=\"navigation-container-top\"]"));
+                return WebPage.LocateElement(By.XPath("//div[@class=\"navigation\"]/ul/li[3]"));
             }
         }
         public IWebElement SentButton
@@ -79,7 +79,8 @@ namespace MailTest.MailComPages
             get
             {
                 //switch to "mail-display-content" frame before using this element
-                return WebPage.LocateElement(By.XPath("//html/body/div/div"));
+                return WebPage.LocateElement(By.XPath("//html/body"));
+                //return WebPage.LocateElement(By.XPath("//html/body/div/div"));
             }
         }
 
@@ -122,6 +123,9 @@ namespace MailTest.MailComPages
                 return WebPage.LocateElement(By.Id("compose-send-button"));
             }
         }
+
+        //[FindsBy(How = How.Id, Using = "account")]
+        //public IWebElement CloseSucsessMessage;
         public IWebElement CloseSucsessMessage
         {
             get
@@ -160,7 +164,7 @@ namespace MailTest.MailComPages
 
         public void SwitchToDefaultContent()
         {
-            WebPage.Driver.SwitchTo().DefaultContent();
+            Driver.SwitchTo().DefaultContent();
         }
         /*
         public string FromCheck()

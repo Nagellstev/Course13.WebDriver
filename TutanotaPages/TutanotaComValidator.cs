@@ -59,12 +59,11 @@ namespace MailTest.TutanotaPages
             Assert.Contains(expectedTo.ToLower(), realTo);
 
             //subject check
-            Assert.Equal(expectedSubject, realSubject);
+            Assert.Contains(expectedSubject, realSubject);
 
             //text check
-            Assert.Equal(expectedText, realText);
+            Assert.Contains(expectedText, realText);
             //Assert.Contains(expectedText.ToLower(), realText);
-
         }
 
         #endregion

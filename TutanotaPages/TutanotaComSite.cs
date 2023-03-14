@@ -59,6 +59,7 @@ namespace MailTest.TutanotaPages
         public void SendLetter(string to, string subject, string text)
         {
             tutanotaComEmailPageMap.NewLetterButton.Click();
+            Thread.Sleep(1000);
             tutanotaComEmailPageMap.ToField.SendKeys(to);//"kazimir@myself.com");
             tutanotaComEmailPageMap.SubjectField.SendKeys(subject);
 

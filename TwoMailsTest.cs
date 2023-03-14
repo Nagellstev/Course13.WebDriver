@@ -6,98 +6,67 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using static System.Net.Mime.MediaTypeNames;
+using MailTest.Utilities;
 
 namespace MailTest
 {
-    public class TwoMailsTest
+    public class TwoMailsTest : IDisposable
     {
-        public class MailComFixture : IDisposable
+        private ChromeDriver chromeDriver = new ChromeDriver();
+        private MailComSite mailComSite { get; set; }
+
+
+        private TutanotaComSite tutanotaComSite { get; set; }
+
+        public TwoMailsTest()
         {
-            private ChromeDriver chromeDriver = new ChromeDriver();
-            public MailComSite mailComSite { get; set; }
+            // SetUp handled in each test case
+            ChromeOptions options = new ChromeOptions();
+            options.AddArguments("--disable-notifications"); // to disable notification
+            chromeDriver = new ChromeDriver(options);
 
-            public MailComFixture()
-            {
-                // SetUp handled in each test case
-                mailComSite = new MailComSite(chromeDriver);
+            tutanotaComSite = new TutanotaComSite(chromeDriver);
 
-                chromeDriver.Manage().Window.Maximize();
-            }
+            mailComSite = new MailComSite(chromeDriver);
 
-            public void Dispose()
-            {
-                // Closure handled in each test case
-                chromeDriver.Close();
-                chromeDriver.Quit();
-            }
+            chromeDriver.Manage().Window.Maximize();
         }
 
-        public class TutanotaComFixture : IDisposable
+        public void Dispose()
         {
-            private ChromeDriver chromeDriver;// = new ChromeDriver();
-            public TutanotaComSite tutanotaComSite { get; set; }
-
-            public TutanotaComFixture()
-            {
-                // SetUp handled in each test case
-                ChromeOptions options = new ChromeOptions();
-                options.AddArguments("--disable-notifications"); // to disable notification
-                chromeDriver = new ChromeDriver(options);
-                tutanotaComSite = new TutanotaComSite(chromeDriver);
-
-                chromeDriver.Manage().Window.Maximize();
-            }
-
-            public void Dispose()
-            {
-                // Closure handled in each test case
-                chromeDriver.Close();
-                chromeDriver.Quit();
-            }
+            // Closure handled in each test case
+            chromeDriver.Close();
+            chromeDriver.Quit();
         }
-
         /// <summary>
         /// send letter from mail.com to tutanota.com
         /// check if subject and text match
         /// </summary>
-        [Theory]
-        [InlineData("")]
-        public void SendFromMailToTutanotaTest(string arg)
+        [Fact]
+        public void SendFromMailToTutanotaTest()
         {
             //Arrange
-            MailComFixture mailComFixture = new MailComFixture();
-            MailComSite mailComSite = mailComFixture.mailComSite;
             string loginMail = "kazimir@myself.com";
             string passwordMail = "pKiVGd6qAHSb6#D";
 
-            TutanotaComFixture tutanotaComFixture = new TutanotaComFixture();
-            TutanotaComSite tutanotaComSite = tutanotaComFixture.tutanotaComSite;
-            string loginTutanota = "oscar-claude@tutanota.com";
-            string passwordTutanota = "SfTxJeeGnhKzk9j";
+            string loginTutanota = "pierre-auguste@tutanota.com";
+            string passwordTutanota = "rsKTnpgAd7YjYTY";
 
-            string subject = SubjectGenerator();
-            string text = RandomStringGenerator();
+            string subject = StringGenerators.SubjectGenerator();
+            string text = StringGenerators.RandomStringGenerator();
 
-            try
-            {
-                //Act
-                mailComSite.Navigate();
-                mailComSite.Login(loginMail, passwordMail);
-                mailComSite.SendLetter(loginTutanota, subject, text);
+            //Act
+            mailComSite.Navigate();
+            mailComSite.Login(loginMail, passwordMail);
+            mailComSite.SendLetter(loginTutanota, subject, text);
 
-                tutanotaComSite.Navigate();
-                tutanotaComSite.Login(loginTutanota, passwordTutanota);
+            tutanotaComSite.Navigate();
+            tutanotaComSite.Login(loginTutanota, passwordTutanota);
 
-                List<string> incomingLetter = tutanotaComSite.ReadIncomingLetter();
+            List<string> incomingLetter = tutanotaComSite.ReadIncomingLetter();
 
-                //Assert
-                tutanotaComSite.Validate().SentLetterCheck(loginMail, subject, text, incomingLetter[0], incomingLetter[1], incomingLetter[2]);
-            }
-            finally
-            {
-                mailComFixture.Dispose();
-                tutanotaComFixture.Dispose();
-            }
+            //Assert
+            tutanotaComSite.Validate().SentLetterCheck(loginMail, subject, text, incomingLetter[0], incomingLetter[1], incomingLetter[2]);
         }
 
         /// <summary>
@@ -105,63 +74,43 @@ namespace MailTest
         /// check if subject and text match
         /// respond from tutanota with new alias for mail.com
         /// </summary>
-        [Theory]
-        [InlineData("")]
-        public void SendFromMailToTutanotaAndReplyTest(string arg)
+        [Fact]
+        public void SendFromMailToTutanotaAndReplyTest()
         {
+            
             //Arrange
-            MailComFixture mailComFixture = new MailComFixture();
-            MailComSite mailComSite = mailComFixture.mailComSite;
             string loginMail = "kazimir@myself.com";
             string passwordMail = "pKiVGd6qAHSb6#D";
 
-            TutanotaComFixture tutanotaComFixture = new TutanotaComFixture();
-            TutanotaComSite tutanotaComSite = tutanotaComFixture.tutanotaComSite;
-            string loginTutanota = "oscar-claude@tutanota.com";
-            string passwordTutanota = "SfTxJeeGnhKzk9j";
+            string loginTutanota = "pierre-auguste@tutanota.com";
+            string passwordTutanota = "rsKTnpgAd7YjYTY";
 
-            string subject = SubjectGenerator();
-            string text = RandomStringGenerator();
+            string subject = StringGenerators.SubjectGenerator();
+            string text = StringGenerators.RandomStringGenerator();
 
-            try
-            {
-                //Act
-                mailComSite.Navigate();
-                mailComSite.Login(loginMail, passwordMail);
-                mailComSite.SendLetter(loginTutanota, subject, text);
+            //Act
+            mailComSite.Navigate();
+            mailComSite.Login(loginMail, passwordMail);
+            mailComSite.SendLetter(loginTutanota, subject, text);
 
-                tutanotaComSite.Navigate();
-                tutanotaComSite.Login(loginTutanota, passwordTutanota);
+            tutanotaComSite.Navigate();
+            tutanotaComSite.Login(loginTutanota, passwordTutanota);
 
-                List<string> incomingLetter = tutanotaComSite.ReadIncomingLetter();
+            List<string> incomingLetter = tutanotaComSite.ReadIncomingLetter();
 
-                //Assert
-                tutanotaComSite.Validate().SentLetterCheck(loginMail, subject, text, incomingLetter[0], incomingLetter[1], incomingLetter[2]);
+            //Assert
+            tutanotaComSite.Validate().SentLetterCheck(loginMail, subject, text, incomingLetter[0], incomingLetter[1], incomingLetter[2]);
+            
+            //SendFromMailToTutanotaTest();
 
-                //send new alias for mail.com
-                tutanotaComSite.ReplyLetter("Edouard Manet");
-            }
-            finally
-            {
-                mailComFixture.Dispose();
-                tutanotaComFixture.Dispose();
-            }
-        }
+            //send new alias for mail.com
+            string replyText = "Edouard Manet";
+            tutanotaComSite.ReplyLetter(replyText);
 
-        private string RandomStringGenerator()
-        {
-            Random random = new Random();
-            int symbolsQuantity = random.Next(10, 22);
-            string text = "";
-            for (int i = 0; i < symbolsQuantity; i++)
-            {
-                text += (char)random.Next(33, 127);
-            }
-            return text;
-        }
-        private string SubjectGenerator()
-        {
-            return $"Letter from {DateTime.Now}";
+            List<string> outcomingLetter = tutanotaComSite.ReadOutcomingLetter();
+
+            tutanotaComSite.Validate().SentLetterCheck("kazimir@"/*to*/, subject, replyText, outcomingLetter[0], outcomingLetter[1], outcomingLetter[2]);
         }
     }
 }
+

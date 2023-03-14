@@ -33,6 +33,14 @@ namespace MailTest.MailComPages
                 return WebPage.LocateElement(By.XPath("//*[@id=\"actions-menu-primary\"]/a[@aria-label=\"More\"]"));
             }
         }
+        //buttons appears after "more" pressed
+        public IWebElement MyAccountButton
+        {
+            get
+            {
+                return WebPage.LocateElement(By.XPath("//*[@id=\"actions-menu-hidden\"]/div[4]/section/div[@class=\"actions-menu__itemscontainer\"]/a[1]"));
+            }
+        }
 
         public MailComTopControlsLoggedMap(IWebDriver browser)
         {

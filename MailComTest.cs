@@ -8,27 +8,24 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace MailComTest
 {
-    public class MailComTest
+    public class MailComTest : IDisposable
     {
-        public class MailComFixture : IDisposable
+        private ChromeDriver chromeDriver = new ChromeDriver();
+        private MailComSite mailComSite { get; set; }
+
+        public MailComTest()
         {
-            private ChromeDriver chromeDriver = new ChromeDriver();
-            public MailComSite mailComSite { get; set; }
+            // SetUp handled in each test case
+            mailComSite = new MailComSite(chromeDriver);
 
-            public MailComFixture()
-            {
-                // SetUp handled in each test case
-                mailComSite = new MailComSite(chromeDriver);
+            chromeDriver.Manage().Window.Maximize();
+        }
 
-                chromeDriver.Manage().Window.Maximize();
-            }
-
-            public void Dispose()
-            {
-                // Closure handled in each test case
-                chromeDriver.Close();
-                chromeDriver.Quit();
-            }
+        public void Dispose()
+        {
+            // Closure handled in each test case
+            chromeDriver.Close();
+            chromeDriver.Quit();
         }
 
         [Theory]
@@ -37,22 +34,12 @@ namespace MailComTest
         public void NavigateTest(string expectedTitle)
         {
             //Arrange
-            MailComFixture mailComFixture = new MailComFixture();
-            MailComSite mailComSite = mailComFixture.mailComSite;
 
+            //Act
+            mailComSite.Navigate();
 
-            try
-            {
-                //Act
-                mailComSite.Navigate();
-
-                //Assert
-                mailComSite.Validate().Navigate(expectedTitle);
-            }
-            finally
-            {
-                mailComFixture.Dispose();
-            }
+            //Assert
+            mailComSite.Validate().Navigate(expectedTitle);
         }
 
         [Theory]
@@ -61,22 +48,13 @@ namespace MailComTest
         public void ProperLoginTest(string login, string password)
         {
             //Arrange
-            MailComFixture mailComFixture = new MailComFixture();
-            MailComSite mailComSite = mailComFixture.mailComSite;
 
-            try
-            {
-                //Act
-                mailComSite.Navigate();
-                mailComSite.Login(login, password);
+            //Act
+            mailComSite.Navigate();
+            mailComSite.Login(login, password);
 
-                //Assert
-                mailComSite.Validate().ProperLogin(login);
-            }
-            finally
-            {
-                mailComFixture.Dispose();
-            }
+            //Assert
+            mailComSite.Validate().ProperLogin(login);
         }
 
         [Theory]
@@ -87,51 +65,58 @@ namespace MailComTest
         public void UnproperLoginTest(string login, string password, string expected)
         {
             //Arrange
-            MailComFixture mailComFixture = new MailComFixture();
-            MailComSite mailComSite = mailComFixture.mailComSite;
 
-            try
-            {
-                //Act
-                mailComSite.Navigate();
-                mailComSite.Login(login, password);
+            //Act
+            mailComSite.Navigate();
+            mailComSite.Login(login, password);
 
-                //Assert
-                mailComSite.Validate().UnproperLogin(expected);
-            }
-            finally
-            {
-                mailComFixture.Dispose();
-            }
+            //Assert
+            mailComSite.Validate().UnproperLogin(expected);
         }
 
         [Theory]
-        [InlineData("oscar-claude@tutanota.com", "subject", "text")]
+        [InlineData("pierre-auguste@tutanota.com", "subject", "text")]
 
         public void SendLetterTest(string to, string subject, string text)
         {
             //Arrange
-            MailComFixture mailComFixture = new MailComFixture();
-            MailComSite mailComSite = mailComFixture.mailComSite;
             string login = "kazimir@myself.com";
             string password = "pKiVGd6qAHSb6#D";
 
-            try
-            {
-                //Act
-                mailComSite.Navigate();
-                mailComSite.Login(login, password);
-                mailComSite.SendLetter(to, subject, text);
+            //Act
+            mailComSite.Navigate();
+            mailComSite.Login(login, password);
+            mailComSite.SendLetter(to, subject, text);
 
-                List<string> outcomingLetter = mailComSite.ReadOutcomingLetter();
+            List<string> outcomingLetter = mailComSite.ReadOutcomingLetter();
 
-                //Assert
-                mailComSite.Validate().SentLetterCheck(to, subject, text, outcomingLetter[0], outcomingLetter[1], outcomingLetter[2]);
-            }
-            finally
-            {
-                mailComFixture.Dispose();
-            }
+            //Assert
+            mailComSite.Validate().SentLetterCheck(to, subject, text, outcomingLetter[0], outcomingLetter[1], outcomingLetter[2]);
+        }
+
+        [Fact]
+        public void ChangeNameTest()
+        {
+            //Arrange
+            string login = "kazimir@myself.com";
+            string password = "pKiVGd6qAHSb6#D";
+
+            //Act
+            mailComSite.Navigate();
+            mailComSite.Login(login, password);
+            string text = mailComSite.ReadIncomingLetter()[2];
+
+            string[] newName = text.Split(' ', '\n', '\t', '\r', '\b', ',', '.');
+
+            string firstName = newName[0];
+            string lastName = newName[1];
+
+            mailComSite.ChangeName(firstName, lastName, password);
+
+            string realName = mailComSite.ReadName();
+
+            //Assert
+            mailComSite.Validate().ChangedNameCheck($"{firstName} {lastName}", realName);
         }
     }
 }

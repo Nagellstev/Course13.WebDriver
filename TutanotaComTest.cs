@@ -10,30 +10,27 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace TutanotaComTest
 {
-    public class TutanotaComTest
+    public class TutanotaComTest : IDisposable
     {
-        public class TutanotaComFixture : IDisposable
+        private ChromeDriver chromeDriver;// = new ChromeDriver();
+        private TutanotaComSite tutanotaComSite { get; set; }
+
+        public TutanotaComTest()
         {
-            private ChromeDriver chromeDriver;// = new ChromeDriver();
-            public TutanotaComSite tutanotaComSite { get; set; }
+            // SetUp handled in each test case
+            ChromeOptions options = new ChromeOptions();
+            options.AddArguments("--disable-notifications"); // to disable notification
+            chromeDriver = new ChromeDriver(options);
+            tutanotaComSite = new TutanotaComSite(chromeDriver);
 
-            public TutanotaComFixture()
-            {
-                // SetUp handled in each test case
-                ChromeOptions options = new ChromeOptions();
-                options.AddArguments("--disable-notifications"); // to disable notification
-                chromeDriver = new ChromeDriver(options);
-                tutanotaComSite = new TutanotaComSite(chromeDriver);
+            chromeDriver.Manage().Window.Maximize();
+        }
 
-                chromeDriver.Manage().Window.Maximize();
-            }
-
-            public void Dispose()
-            {
-                // Closure handled in each test case
-                chromeDriver.Close();
-                chromeDriver.Quit();
-            }
+        public void Dispose()
+        {
+            // Closure handled in each test case
+            chromeDriver.Close();
+            chromeDriver.Quit();
         }
 
         [Theory]
@@ -42,71 +39,42 @@ namespace TutanotaComTest
         public void NavigateTest(string expectedTitle)
         {
             //Arrange
-            TutanotaComFixture tutanotaComFixture = new TutanotaComFixture();
-            TutanotaComSite tutanotaComSite = tutanotaComFixture.tutanotaComSite;
 
-            try
-            {
-                //Act
-                tutanotaComSite.Navigate();
+            //Act
+            tutanotaComSite.Navigate();
 
-                //Assert
-                tutanotaComSite.Validate().Navigate(expectedTitle);
-            }
-            finally
-            {
-                tutanotaComFixture.Dispose();
-            }
+            //Assert
+            tutanotaComSite.Validate().Navigate(expectedTitle);
         }
 
         [Theory]
-        [InlineData("oscar-claude@tutanota.com", "SfTxJeeGnhKzk9j")]
-
+        [InlineData("pierre-auguste@tutanota.com", "rsKTnpgAd7YjYTY")]
         public void ProperLoginTest(string login, string password)
         {
             //Arrange
-            TutanotaComFixture tutanotaComFixture = new TutanotaComFixture();
-            TutanotaComSite tutanotaComSite = tutanotaComFixture.tutanotaComSite;
 
-            try
-            {
-                //Act
-                tutanotaComSite.Navigate();
-                tutanotaComSite.Login(login, password);
+            //Act
+            tutanotaComSite.Navigate();
+            tutanotaComSite.Login(login, password);
 
-                //Assert
-                tutanotaComSite.Validate().ProperLogin(login);
-            }
-            finally
-            {
-                tutanotaComFixture.Dispose();
-            }
+            //Assert
+            tutanotaComSite.Validate().ProperLogin(login);
         }
 
         [Theory]
-        [InlineData("oscar-claude@tutanota.com", "123456", "Воcстановить доступ")]
-        [InlineData("oscar-claude@tutanota.com", "", "Воcстановить доступ")]
+        [InlineData("pierre-auguste@tutanota.com", "123456", "Воcстановить доступ")]
+        [InlineData("pierre-auguste@tutanota.com", "", "Воcстановить доступ")]
         [InlineData("", "", "Воcстановить доступ")]
-
         public void UnproperLoginTest(string login, string password, string expected)
         {
             //Arrange
-            TutanotaComFixture tutanotaComFixture = new TutanotaComFixture();
-            TutanotaComSite tutanotaComSite = tutanotaComFixture.tutanotaComSite;
 
-            try
-            {
-                //Act
-                tutanotaComSite.Navigate();
-                tutanotaComSite.Login(login, password);
+            //Act
+            tutanotaComSite.Navigate();
+            tutanotaComSite.Login(login, password);
 
-                //Assert
-                tutanotaComSite.Validate().UnproperLogin(expected);
-            }
-            finally
-            {
-                tutanotaComFixture.Dispose();
-            }
+            //Assert
+            tutanotaComSite.Validate().UnproperLogin(expected);
         }
 
         [Theory]
@@ -114,28 +82,18 @@ namespace TutanotaComTest
         public void SendLetterTest(string to, string subject, string text)
         {
             //Arrange
-            TutanotaComFixture tutanotaComFixture = new TutanotaComFixture();
-            TutanotaComSite tutanotaComSite = tutanotaComFixture.tutanotaComSite;
-            string login = "oscar-claude@tutanota.com";
-            string password = "SfTxJeeGnhKzk9j";
+            string login = "pierre-auguste@tutanota.com";
+            string password = "rsKTnpgAd7YjYTY";
 
-            try
-            {
-                //Act
-                tutanotaComSite.Navigate();
-                tutanotaComSite.Login(login, password);
-                tutanotaComSite.SendLetter(to, subject, text);
+            //Act
+            tutanotaComSite.Navigate();
+            tutanotaComSite.Login(login, password);
+            tutanotaComSite.SendLetter(to, subject, text);
 
-                List<string> outcomingLetter = tutanotaComSite.ReadOutcomingLetter();
+            List<string> outcomingLetter = tutanotaComSite.ReadOutcomingLetter();
 
-                //Assert
-                tutanotaComSite.Validate().SentLetterCheck("kazimir@"/*to*/, subject, text, outcomingLetter[0], outcomingLetter[1], outcomingLetter[2]);
-            }
-            finally
-            {
-                tutanotaComFixture.Dispose();
-            }
+            //Assert
+            tutanotaComSite.Validate().SentLetterCheck("kazimir@"/*to*/, subject, text, outcomingLetter[0], outcomingLetter[1], outcomingLetter[2]);
         }
-
     }
 }
